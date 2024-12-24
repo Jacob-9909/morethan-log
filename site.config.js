@@ -6,6 +6,7 @@ const CONFIG = {
     role: "Data Scientist",
     bio: "I develop everything using Python.",
     email: "cj0336j@gmail.com",
+    linkedin: "Jacob",
     github: "Jacob",
     instagram: "",
   },
