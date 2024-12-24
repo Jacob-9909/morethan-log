@@ -1,6 +1,6 @@
 .PHONY: setup dev run
 
-NOTION_PAGE_ID := 166bde17d01780afb931c6b4e84f9909
+NOTION_PAGE_ID= :=
 setup:
 	docker build . -t morethan-log ; \
 	docker run -it --rm -v $(PWD):/app morethan-log /bin/bash -c "yarn install" ; \
