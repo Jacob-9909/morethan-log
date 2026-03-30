@@ -18,54 +18,70 @@ const filter: FilterPostsOptions = {
 }
 
 export const getStaticPaths = async () => {
-  const posts = await getPosts()
-  const filteredPost = filterPosts(posts, filter)
+  try {
+    const posts = await getPosts()
+    const filteredPost = filterPosts(posts, filter)
 
-  return {
-    paths: filteredPost
-      .filter((row) => Boolean(row.slug))
-      .map((row) => ({ params: { slug: row.slug } })),
-    fallback: true,
+    return {
+      paths: filteredPost
+        .filter((row) => Boolean(row.slug))
+        .map((row) => ({ params: { slug: row.slug } })),
+      fallback: true,
+    }
+  } catch (error) {
+    console.error("[slug] getStaticPaths failed:", error)
+    return {
+      paths: [],
+      fallback: true,
+    }
   }
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const rawSlug = context.params?.slug
-  const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug
+  try {
+    const rawSlug = context.params?.slug
+    const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug
 
-  if (!slug) {
+    if (!slug) {
+      return {
+        notFound: true,
+        revalidate: CONFIG.revalidateTime,
+      }
+    }
+
+    const posts = await getPosts()
+    const feedPosts = filterPosts(posts)
+    await queryClient.prefetchQuery(queryKey.posts(), () => feedPosts)
+
+    const detailPosts = filterPosts(posts, filter)
+    const postDetail = detailPosts.find((t: any) => t.slug === slug)
+
+    if (!postDetail?.id) {
+      return {
+        notFound: true,
+        revalidate: CONFIG.revalidateTime,
+      }
+    }
+
+    const recordMap = await getRecordMap(postDetail.id)
+
+    await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
+      ...postDetail,
+      recordMap,
+    }))
+
+    return {
+      props: {
+        dehydratedState: dehydrate(queryClient),
+      },
+      revalidate: CONFIG.revalidateTime,
+    }
+  } catch (error) {
+    console.error("[slug] getStaticProps failed:", error)
     return {
       notFound: true,
       revalidate: CONFIG.revalidateTime,
     }
-  }
-
-  const posts = await getPosts()
-  const feedPosts = filterPosts(posts)
-  await queryClient.prefetchQuery(queryKey.posts(), () => feedPosts)
-
-  const detailPosts = filterPosts(posts, filter)
-  const postDetail = detailPosts.find((t: any) => t.slug === slug)
-
-  if (!postDetail?.id) {
-    return {
-      notFound: true,
-      revalidate: CONFIG.revalidateTime,
-    }
-  }
-
-  const recordMap = await getRecordMap(postDetail.id)
-
-  await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
-    ...postDetail,
-    recordMap,
-  }))
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-    revalidate: CONFIG.revalidateTime,
   }
 }
 
