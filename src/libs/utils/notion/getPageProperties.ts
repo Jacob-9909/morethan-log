@@ -8,11 +8,10 @@ async function getPageProperties(
   block: BlockMap,
   schema: CollectionPropertySchemaMap
 ) {
-  const api = new NotionAPI({
-    authToken: process.env.NOTION_TOKEN,
-    activeUser: process.env.NOTION_ACTIVE_USER,
-  })
-  const rawProperties = Object.entries(block?.[id]?.value?.properties || [])
+  const api = new NotionAPI()
+  const blockEntry = block?.[id]?.value as any
+  const blockValue = blockEntry?.value ?? blockEntry
+  const rawProperties = Object.entries(blockValue?.properties || [])
   const excludeProperties = ["date", "select", "multi_select", "person", "file"]
   const properties: any = {}
   for (let i = 0; i < rawProperties.length; i++) {
@@ -24,7 +23,7 @@ async function getPageProperties(
       switch (schema[key]?.type) {
         case "file": {
           try {
-            const Block = block?.[id].value
+            const Block = blockValue
             const url: string = val[0][1][0][1]
             const newurl = customMapImageUrl(url, Block)
             properties[schema[key].name] = newurl
