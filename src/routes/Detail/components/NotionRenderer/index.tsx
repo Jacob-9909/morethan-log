@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
-import { ExtendedRecordMap } from "notion-types"
+import { Block, ExtendedRecordMap } from "notion-types"
 import useScheme from "src/hooks/useScheme"
 
 // core styles shared by all of react-notion-x (required)
@@ -51,6 +51,29 @@ const mapPageUrl = (id: string) => {
   return "https://www.notion.so/" + id.replace(/-/g, "")
 }
 
+const mapImageUrl = (url: string, block: Block) => {
+  if (!url) return ""
+  if (url.startsWith("data:") || url.startsWith("https://images.unsplash.com")) {
+    return url
+  }
+  if (url.startsWith("/images")) {
+    url = `https://www.notion.so${url}`
+  }
+  if (!url.startsWith("/image")) {
+    url = `https://www.notion.so/image/${encodeURIComponent(url)}`
+  } else {
+    url = `https://www.notion.so${url}`
+  }
+  const u = new URL(url)
+  if (block) {
+    const table = block.parent_table === "space" ? "block" : block.parent_table
+    u.searchParams.set("table", table === "collection" || table === "team" ? "block" : table)
+    u.searchParams.set("id", block.id ?? "")
+    u.searchParams.set("cache", "v2")
+  }
+  return u.toString()
+}
+
 type Props = {
   recordMap: ExtendedRecordMap
 }
@@ -72,6 +95,7 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
           nextLink: Link,
         }}
         mapPageUrl={mapPageUrl}
+        mapImageUrl={mapImageUrl}
       />
     </StyledWrapper>
   )
