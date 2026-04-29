@@ -9,16 +9,14 @@ const initialOption: FilterPostsOptions = {
   acceptStatus: ["Public"],
   acceptType: ["Post"],
 }
-const current = new Date()
-const tomorrow = new Date(current)
-tomorrow.setDate(tomorrow.getDate() + 1)
-tomorrow.setHours(0, 0, 0, 0)
-
 export function filterPosts(
   posts: TPosts,
   options: FilterPostsOptions = initialOption
 ) {
   const { acceptStatus = ["Public"], acceptType = ["Post"] } = options
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  tomorrow.setHours(0, 0, 0, 0)
   const filteredPosts = posts
     // filter data
     .filter((post) => {
