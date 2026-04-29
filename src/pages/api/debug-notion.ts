@@ -15,35 +15,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const collectionId = Object.keys(response.collection ?? {})[0]
   const collectionViewId = Object.keys(response.collection_view ?? {})[0]
+  const collectionValue = Object.values(response.collection ?? {})[0]?.value as any
+  const collection = collectionValue?.value ?? collectionValue
 
-  let queryResult: any = null
-  let queryError: any = null
+  // list available methods on api
+  const apiMethods = Object.getOwnPropertyNames(Object.getPrototypeOf(api)).filter(
+    (m) => typeof (api as any)[m] === "function"
+  )
+
+  let collectResult: any = null
+  let collectError: any = null
   try {
-    queryResult = await (api as any).queryCollection({
+    collectResult = await (api as any).getCollectionData(
       collectionId,
       collectionViewId,
-      query: {},
-      loader: {
-        type: "reducer",
-        reducers: {
-          collection_group_results: {
-            type: "results",
-            limit: 999,
-          },
-        },
-        searchQuery: "",
-        userTimeZone: "Asia/Seoul",
-      },
-    })
+      collection,
+      { limit: 999 }
+    )
   } catch (e: any) {
-    queryError = e?.message
+    collectError = e?.message
   }
 
   res.json({
+    apiMethods,
     collectionId,
     collectionViewId,
-    queryResultKeys: queryResult ? Object.keys(queryResult) : null,
-    queryResultResult: queryResult?.result,
-    queryError,
+    collectError,
+    collectResultKeys: collectResult ? Object.keys(collectResult) : null,
+    collectResultBlockIds:
+      collectResult?.result?.reducerResults?.collection_group_results?.blockIds ?? null,
   })
 }
