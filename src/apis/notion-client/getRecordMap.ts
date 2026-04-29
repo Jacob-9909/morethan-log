@@ -1,5 +1,8 @@
 import { NotionAPI } from "notion-client"
 
+const sanitizeForNextProps = <T,>(value: T): T =>
+  JSON.parse(JSON.stringify(value)) as T
+
 export const getRecordMap = async (pageId: string) => {
   const api = new NotionAPI({
     authToken: process.env.NOTION_TOKEN,
@@ -19,5 +22,5 @@ export const getRecordMap = async (pageId: string) => {
     }
   }
 
-  return recordMap
+  return sanitizeForNextProps(recordMap)
 }

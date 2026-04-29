@@ -6,7 +6,7 @@ import CustomError from "src/routes/Error"
 import { getRecordMap, getPosts } from "src/apis"
 import MetaConfig from "src/components/MetaConfig"
 import { GetStaticProps } from "next"
-import { queryClient } from "src/libs/react-query"
+import { createQueryClient } from "src/libs/react-query"
 import { queryKey } from "src/constants/queryKey"
 import { dehydrate } from "@tanstack/react-query"
 import usePostQuery from "src/hooks/usePostQuery"
@@ -39,6 +39,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   try {
+    const queryClient = createQueryClient()
     const rawSlug = context.params?.slug
     const slug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug
 
@@ -63,11 +64,11 @@ export const getStaticProps: GetStaticProps = async (context) => {
       }
     }
 
-    const recordMap = await getRecordMap(postDetail.id)
+    const safeRecordMap = await getRecordMap(postDetail.id)
 
     await queryClient.prefetchQuery(queryKey.post(`${slug}`), () => ({
       ...postDetail,
-      recordMap,
+      recordMap: safeRecordMap,
     }))
 
     return {
