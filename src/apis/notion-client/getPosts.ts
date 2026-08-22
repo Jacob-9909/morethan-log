@@ -5,7 +5,24 @@ import { idToUuid } from "notion-utils"
 import getPageProperties from "src/libs/utils/notion/getPageProperties"
 import { TPosts } from "src/types"
 
+const POSTS_CACHE_TTL_MS = 1000 * 60 * 5
+let postsCache: { at: number; data: TPosts } | null = null
+
 export const getPosts = async () => {
+  if (postsCache && Date.now() - postsCache.at < POSTS_CACHE_TTL_MS) {
+    return postsCache.data
+  }
+  try {
+    const data = await fetchPosts()
+    postsCache = { at: Date.now(), data }
+    return data
+  } catch (error) {
+    if (postsCache) return postsCache.data
+    throw error
+  }
+}
+
+const fetchPosts = async (): Promise<TPosts> => {
   let id = CONFIG.notionConfig.pageId as string
   const api = new NotionAPI({
     authToken: process.env.NOTION_TOKEN,
