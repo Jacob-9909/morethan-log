@@ -81,5 +81,17 @@ const fetchPosts = async (): Promise<TPosts> => {
     return dateB - dateA
   })
 
+  const seenSlugs = new Map<string, number>()
+  for (const post of data) {
+    const normalized = String(post.slug ?? "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+    post.slug = normalized || "untitled"
+    const count = seenSlugs.get(post.slug) ?? 0
+    seenSlugs.set(post.slug, count + 1)
+    if (count > 0) post.slug = `${post.slug}-${count + 1}`
+  }
+
   return data as TPosts
 }
