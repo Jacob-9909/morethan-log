@@ -5,7 +5,7 @@ import { idToUuid } from "notion-utils"
 import getPageProperties from "src/libs/utils/notion/getPageProperties"
 import { TPosts } from "src/types"
 
-const POSTS_CACHE_TTL_MS = 1000 * 60 * 5
+const POSTS_CACHE_TTL_MS = 1000 * CONFIG.revalidateTime
 let postsCache: { at: number; data: TPosts } | null = null
 
 export const getPosts = async () => {
