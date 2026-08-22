@@ -2,6 +2,7 @@ import { getTextContent, getDateValue } from "notion-utils"
 import { NotionAPI } from "notion-client"
 import { BlockMap, CollectionPropertySchemaMap } from "notion-types"
 import { customMapImageUrl } from "./customMapImageUrl"
+import { CONFIG } from "site.config"
 
 async function getPageProperties(
   id: string,
@@ -63,11 +64,13 @@ async function getPageProperties(
               const resValue =
                 res?.recordMapWithRoles?.notion_user?.[userId[1]]?.value
               const user = {
-                id: resValue?.id ?? null,
+                id: resValue?.id ?? userId[1] ?? null,
                 name:
                   resValue?.name ||
-                  `${resValue?.family_name}${resValue?.given_name}` ||
-                  null,
+                  [resValue?.family_name, resValue?.given_name]
+                    .filter(Boolean)
+                    .join("") ||
+                  CONFIG.profile.name,
                 profile_photo: resValue?.profile_photo || null,
               }
               users.push(user)
