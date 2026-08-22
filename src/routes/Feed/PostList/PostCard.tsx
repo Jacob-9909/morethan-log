@@ -69,15 +69,16 @@ const StyledWrapper = styled(Link)`
     border-radius: 1rem;
     background-color: ${({ theme }) =>
       theme.scheme === "light" ? "white" : theme.colors.gray4};
-    transition-property: box-shadow;
+    transition-property: box-shadow, transform;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
+    transition-duration: 200ms;
 
     @media (min-width: 768px) {
       margin-bottom: 2rem;
     }
 
     :hover {
+      transform: translateY(-2px);
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
         0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
@@ -91,12 +92,21 @@ const StyledWrapper = styled(Link)`
     > .thumbnail {
       position: relative;
       width: 100%;
+      overflow: hidden;
+      border-radius: 1rem 1rem 0 0;
       background-color: ${({ theme }) => theme.colors.gray2};
       padding-bottom: 66%;
+
+      img {
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
       @media (min-width: 1024px) {
         padding-bottom: 50%;
       }
+    }
+    :hover > .thumbnail img {
+      transform: scale(1.03);
     }
     > .content {
       padding: 1rem;

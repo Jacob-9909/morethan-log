@@ -1,7 +1,10 @@
 import NavBar from "./NavBar"
 import Logo from "./Logo"
 import ThemeToggle from "./ThemeToggle"
+import CommandPalette from "src/components/CommandPalette"
 import styled from "@emotion/styled"
+import { FiSearch } from "react-icons/fi"
+import React, { useState } from "react"
 import { zIndexes } from "src/styles/zIndexes"
 
 type Props = {
@@ -9,16 +12,27 @@ type Props = {
 }
 
 const Header: React.FC<Props> = ({ fullWidth }) => {
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false)
+
   return (
-    <StyledWrapper>
-      <div data-full-width={fullWidth} className="container">
-        <Logo />
-        <div className="nav">
-          <ThemeToggle />
-          <NavBar />
+    <>
+      <StyledWrapper>
+        <div data-full-width={fullWidth} className="container">
+          <Logo />
+          <div className="nav">
+            <StyledSearchButton
+              onClick={() => setIsPaletteOpen(true)}
+              aria-label="게시글 검색"
+            >
+              <FiSearch />
+            </StyledSearchButton>
+            <ThemeToggle />
+            <NavBar />
+          </div>
         </div>
-      </div>
-    </StyledWrapper>
+      </StyledWrapper>
+      <CommandPalette isOpen={isPaletteOpen} onChange={setIsPaletteOpen} />
+    </>
   )
 }
 
@@ -52,5 +66,17 @@ const StyledWrapper = styled.div`
       gap: 0.75rem;
       align-items: center;
     }
+  }
+`
+
+const StyledSearchButton = styled.button`
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  font-size: 1.125rem;
+  color: ${({ theme }) => theme.colors.gray11};
+
+  :hover {
+    color: ${({ theme }) => theme.colors.gray12};
   }
 `

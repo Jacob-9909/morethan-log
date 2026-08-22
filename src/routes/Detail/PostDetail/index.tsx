@@ -5,6 +5,7 @@ import CommentBox from "./CommentBox"
 import Category from "src/components/Category"
 import styled from "@emotion/styled"
 import NotionRenderer from "../components/NotionRenderer"
+import TableOfContents from "../components/TableOfContents"
 import usePostQuery from "src/hooks/usePostQuery"
 
 type Props = {}
@@ -27,6 +28,7 @@ const PostDetail: React.FC<Props> = () => {
           </div>
         )}
         {data.type[0] === "Post" && <PostHeader data={data} />}
+        {data.type[0] === "Post" && <TableOfContents recordMap={data.recordMap} />}
         <div>
           <NotionRenderer recordMap={data.recordMap} />
         </div>

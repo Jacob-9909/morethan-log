@@ -1,16 +1,37 @@
 import { CONFIG } from "site.config"
 import Tag from "src/components/Tag"
 import { TPost } from "src/types"
+import { ExtendedRecordMap } from "notion-types"
 import { formatDate } from "src/libs/utils"
 import Image from "next/image"
 import React from "react"
 import styled from "@emotion/styled"
 
 type Props = {
-  data: TPost
+  data: TPost & { recordMap?: ExtendedRecordMap }
+}
+
+const getReadingTime = (recordMap?: ExtendedRecordMap) => {
+  if (!recordMap) return null
+  const totalChars = Object.values(recordMap.block ?? {}).reduce(
+    (acc, block) => {
+      const title = block?.value?.properties?.title
+      if (!title) return acc
+      return (
+        acc +
+        title.reduce(
+          (len: number, segment: any) => len + (segment[0]?.length || 0),
+          0
+        )
+      )
+    },
+    0
+  )
+  return Math.max(1, Math.ceil(totalChars / 400))
 }
 
 const PostHeader: React.FC<Props> = ({ data }) => {
+  const readingTime = getReadingTime(data.recordMap)
   return (
     <StyledWrapper>
       <h1 className="title">{data.title}</h1>
@@ -38,6 +59,9 @@ const PostHeader: React.FC<Props> = ({ data }) => {
                 CONFIG.lang
               )}
             </div>
+            {readingTime && (
+              <span className="readTime">· {readingTime} min read</span>
+            )}
           </div>
           <div className="mid">
             {data.tags && (
@@ -98,6 +122,9 @@ const StyledWrapper = styled.div`
         @media (min-width: 768px) {
           margin-left: 0;
         }
+      }
+      .readTime {
+        color: ${({ theme }) => theme.colors.gray11};
       }
     }
     > .mid {

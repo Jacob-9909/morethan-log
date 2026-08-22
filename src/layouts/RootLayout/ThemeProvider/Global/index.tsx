@@ -17,6 +17,7 @@ export const Global = () => {
           font-family: ${pretendard.style.fontFamily};
           font-weight: ${pretendard.style.fontWeight};
           font-style: ${pretendard.style.fontStyle};
+          transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         * {
