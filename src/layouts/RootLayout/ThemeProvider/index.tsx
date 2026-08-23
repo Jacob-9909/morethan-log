@@ -11,6 +11,10 @@ type Props = {
 export const ThemeProvider = ({ scheme, children }: Props) => {
   const theme = createTheme({ scheme })
 
+  if (typeof document !== "undefined") {
+    document.documentElement.dataset.scheme = scheme
+  }
+
   return (
     <_ThemeProvider theme={theme}>
       <Global />

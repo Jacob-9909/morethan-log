@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ::selection {
+    @apply bg-teal-200 text-teal-900;
+  }
+
+  .notion {
+    @apply text-[15px] leading-relaxed text-zinc-700 dark:text-zinc-300 md:text-base;
+  }
+
+  .notion-h1 {
+    @apply mb-3 mt-12 text-[22px] font-bold tracking-tight text-zinc-900 dark:text-zinc-50;
+  }
+
+  .notion-h2 {
+    @apply mb-3 mt-10 border-b border-zinc-100 pb-1.5 text-[19px] font-bold tracking-tight text-zinc-800 dark:border-zinc-800 dark:text-zinc-100;
+  }
+
+  .notion-h3 {
+    @apply mb-2 mt-8 text-[17px] font-semibold tracking-tight text-zinc-800 dark:text-zinc-100;
+  }
+
+  .notion-text {
+    @apply my-3 leading-[1.85];
+  }
+
+  .notion-inline-code {
+    @apply rounded bg-teal-50 px-1.5 py-0.5 font-mono text-[0.85em] text-teal-700 dark:bg-teal-950/60 dark:text-teal-300;
+  }
+
+  .notion-link {
+    @apply text-accent underline decoration-accent/30 underline-offset-2 hover:decoration-accent;
+  }
+
+  .notion-list-disc,
+  .notion-list-decimal {
+    @apply my-3;
+  }
+
+  .notion-code {
+    @apply font-mono !text-[13px];
+  }
+}
+
+@layer components {
+  .note-heading {
+    @apply font-bold tracking-tight text-zinc-800 dark:text-zinc-100;
+  }
+}

@@ -92,18 +92,28 @@ export default PostHeader
 
 const StyledWrapper = styled.div`
   .title {
-    font-size: 1.875rem;
+    font-size: 1.75rem;
     line-height: 2.25rem;
     font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #18181b;
+  }
+  @media (min-width: 768px) {
+    .title {
+      font-size: 2rem;
+    }
+  }
+  [data-scheme="dark"] .title {
+    color: #f4f4f5;
   }
   nav {
-    margin-top: 1.5rem;
-    color: ${({ theme }) => theme.colors.gray11};
+    margin-top: 1rem;
+    color: #71717a;
     > .top {
       display: flex;
-      margin-bottom: 0.75rem;
       gap: 0.75rem;
       align-items: center;
+      font-size: 0.8125rem;
       .author {
         display: flex;
         gap: 0.5rem;
@@ -114,27 +124,24 @@ const StyledWrapper = styled.div`
         margin-bottom: 0.25rem;
         align-self: stretch;
         width: 1px;
-        background-color: ${({ theme }) => theme.colors.gray10};
+        background-color: #d4d4d8;
+      }
+      [data-scheme="dark"] .hr {
+        background-color: #3f3f46;
       }
       .date {
-        margin-right: 0.5rem;
-
-        @media (min-width: 768px) {
-          margin-left: 0;
-        }
-      }
-      .readTime {
-        color: ${({ theme }) => theme.colors.gray11};
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.75rem;
       }
     }
     > .mid {
       display: flex;
-      margin-bottom: 1rem;
+      margin-top: 0.75rem;
       align-items: center;
       .tags {
         display: flex;
         overflow-x: auto;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         gap: 0.5rem;
         max-width: 100%;
       }
@@ -142,15 +149,16 @@ const StyledWrapper = styled.div`
     .thumbnail {
       overflow: hidden;
       position: relative;
-      margin-bottom: 1.75rem;
-      border-radius: 1.5rem;
+      margin-top: 1.5rem;
+      border-radius: 0.75rem;
       width: 100%;
-      background-color: ${({ theme }) => theme.colors.gray4};
-      padding-bottom: 66%;
-
-      @media (min-width: 1024px) {
-        padding-bottom: 50%;
-      }
+      background-color: #f4f4f5;
+      padding-bottom: 50%;
+      border: 1px solid #e4e4e7;
+    }
+    [data-scheme="dark"] .thumbnail {
+      background-color: #27272a;
+      border-color: #3f3f46;
     }
   }
 `
