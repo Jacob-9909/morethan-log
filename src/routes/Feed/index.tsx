@@ -6,6 +6,7 @@ import SearchInput from "./SearchInput"
 import Footer from "./Footer"
 import PostList from "./PostList"
 import TagList from "./TagList"
+import Sidebar from "./Sidebar"
 import { DEFAULT_CATEGORY } from "src/constants"
 import usePostsQuery from "src/hooks/usePostsQuery"
 
@@ -27,6 +28,12 @@ const Feed: React.FC<Props> = () => {
     ),
   ]
 
+  const thisMonth = new Date().toISOString().slice(0, 7)
+  const monthlyNotes = posts.filter(
+    (p) =>
+      String(p?.date?.start_date || p.createdTime).slice(0, 7) === thisMonth
+  ).length
+
   const selectCategory = (category: string) => {
     const query = { ...router.query }
     if (category === DEFAULT_CATEGORY) {
@@ -38,22 +45,25 @@ const Feed: React.FC<Props> = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-12 md:py-16">
-      <ProfileIntro />
-      <div className="mt-10">
-        <SearchInput value={q} onChange={(e) => setQ(e.target.value)} />
+    <div className="mx-auto w-full max-w-2xl px-4 py-12 md:py-16 lg:grid lg:max-w-4xl lg:grid-cols-[1fr_190px] lg:gap-14">
+      <div className="min-w-0">
+        <ProfileIntro />
+        <div className="mt-10">
+          <SearchInput value={q} onChange={(e) => setQ(e.target.value)} />
+        </div>
+        <CategoryChips
+          categories={categories}
+          current={currentCategory}
+          onSelect={selectCategory}
+          reduceMotion={reduceMotion}
+        />
+        <TagList />
+        <PostList q={q} />
+        <div className="mt-16 lg:hidden">
+          <Footer />
+        </div>
       </div>
-      <CategoryChips
-        categories={categories}
-        current={currentCategory}
-        onSelect={selectCategory}
-        reduceMotion={reduceMotion}
-      />
-      <TagList />
-      <PostList q={q} />
-      <div className="mt-16">
-        <Footer />
-      </div>
+      <Sidebar totalNotes={posts.length} monthlyNotes={monthlyNotes} />
     </div>
   )
 }
