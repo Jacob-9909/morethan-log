@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import useTagsQuery from "src/hooks/useTagsQuery"
+import { useTagsQuery } from "src/hooks/useTagsQuery"
 import { CONFIG } from "site.config"
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 }
 
 const Sidebar: React.FC<Props> = ({ totalNotes, monthlyNotes }) => {
-  const tags = useTagsQuery()
+  const tags = useTagsQuery() as Record<string, number>
   const topTags = Object.entries(tags)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 8)
