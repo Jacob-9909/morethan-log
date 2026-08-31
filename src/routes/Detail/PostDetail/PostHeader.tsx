@@ -5,7 +5,6 @@ import { ExtendedRecordMap } from "notion-types"
 import { formatDate } from "src/libs/utils"
 import Image from "next/image"
 import React from "react"
-import styled from "@emotion/styled"
 
 type Props = {
   data: TPost & { recordMap?: ExtendedRecordMap }
@@ -33,50 +32,54 @@ const getReadingTime = (recordMap?: ExtendedRecordMap) => {
 const PostHeader: React.FC<Props> = ({ data }) => {
   const readingTime = getReadingTime(data.recordMap)
   return (
-    <StyledWrapper>
-      <h1 className="title">{data.title}</h1>
+    <div className="pb-6">
+      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 md:text-3xl">
+        {data.title}
+      </h1>
       {data.type[0] !== "Paper" && (
-        <nav>
-          <div className="top">
+        <nav className="mt-4 text-zinc-500 dark:text-zinc-400">
+          <div className="flex flex-wrap items-center gap-3 text-[13px]">
             {data.author && data.author[0] && data.author[0].name && (
               <>
-                <div className="author">
+                <div className="flex items-center gap-2">
                   <Image
-                    css={{ borderRadius: "50%" }}
+                    className="rounded-full"
                     src={data.author[0].profile_photo || CONFIG.profile.image}
                     alt="profile_photo"
                     width={24}
                     height={24}
                   />
-                  <div className="">{data.author[0].name}</div>
+                  <span className="font-medium text-zinc-700 dark:text-zinc-200">
+                    {data.author[0].name}
+                  </span>
                 </div>
-                <div className="hr"></div>
+                <div className="h-3 w-px bg-zinc-200 dark:bg-zinc-800" />
               </>
             )}
-            <div className="date">
+            <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
               {formatDate(
                 data?.date?.start_date || data.createdTime,
                 CONFIG.lang
               )}
             </div>
             {readingTime && (
-              <span className="readTime">· {readingTime} min read</span>
+              <span className="text-zinc-400 dark:text-zinc-500">
+                · {readingTime} min read
+              </span>
             )}
           </div>
-          <div className="mid">
-            {data.tags && (
-              <div className="tags">
-                {data.tags.map((tag: string) => (
-                  <Tag key={tag}>{tag}</Tag>
-                ))}
-              </div>
-            )}
-          </div>
+          {data.tags && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {data.tags.map((tag: string) => (
+                <Tag key={tag}>{tag}</Tag>
+              ))}
+            </div>
+          )}
           {data.thumbnail && (
-            <div className="thumbnail">
+            <div className="relative mt-6 overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 pb-[50%] dark:border-zinc-800 dark:bg-zinc-900">
               <Image
                 src={data.thumbnail}
-                css={{ objectFit: "cover" }}
+                className="object-cover"
                 fill
                 alt={data.title}
               />
@@ -84,81 +87,8 @@ const PostHeader: React.FC<Props> = ({ data }) => {
           )}
         </nav>
       )}
-    </StyledWrapper>
+    </div>
   )
 }
 
 export default PostHeader
-
-const StyledWrapper = styled.div`
-  .title {
-    font-size: 1.75rem;
-    line-height: 2.25rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #18181b;
-  }
-  @media (min-width: 768px) {
-    .title {
-      font-size: 2rem;
-    }
-  }
-  [data-scheme="dark"] .title {
-    color: #f4f4f5;
-  }
-  nav {
-    margin-top: 1rem;
-    color: #71717a;
-    > .top {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      font-size: 0.8125rem;
-      .author {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-      }
-      .hr {
-        margin-top: 0.25rem;
-        margin-bottom: 0.25rem;
-        align-self: stretch;
-        width: 1px;
-        background-color: #d4d4d8;
-      }
-      [data-scheme="dark"] .hr {
-        background-color: #3f3f46;
-      }
-      .date {
-        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-        font-size: 0.75rem;
-      }
-    }
-    > .mid {
-      display: flex;
-      margin-top: 0.75rem;
-      align-items: center;
-      .tags {
-        display: flex;
-        overflow-x: auto;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        max-width: 100%;
-      }
-    }
-    .thumbnail {
-      overflow: hidden;
-      position: relative;
-      margin-top: 1.5rem;
-      border-radius: 0.75rem;
-      width: 100%;
-      background-color: #f4f4f5;
-      padding-bottom: 50%;
-      border: 1px solid #e4e4e7;
-    }
-    [data-scheme="dark"] .thumbnail {
-      background-color: #27272a;
-      border-color: #3f3f46;
-    }
-  }
-`
