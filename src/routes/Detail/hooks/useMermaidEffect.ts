@@ -1,79 +1,77 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
 import mermaid from "mermaid"
 import { useEffect, useState } from "react"
-import { queryKey } from "src/constants/queryKey"
 import useScheme from "src/hooks/useScheme"
 
 /**
- *  Wait for mermaid to be defined in the dom
- *  Additionally, verify that the HTML CollectionOf has an array value.
+ * Wait for mermaid elements to be defined in the DOM
  */
 const waitForMermaid = (interval = 100, timeout = 5000) => {
-  return new Promise<HTMLCollectionOf<Element>>((resolve, reject) => {
+  return new Promise<HTMLElement[]>((resolve, reject) => {
     const startTime = Date.now()
-    const elements: HTMLCollectionOf<Element> =
-      document.getElementsByClassName("language-mermaid")
 
-    const checkMerMaidCode = () => {
+    const checkMermaidCode = () => {
+      const elements = Array.from(
+        document.querySelectorAll("code.language-mermaid, pre.language-mermaid, .notion-code.language-mermaid, pre:has(code.language-mermaid)")
+      ) as HTMLElement[]
+
       if (mermaid.render !== undefined && elements.length > 0) {
         resolve(elements)
       } else if (Date.now() - startTime >= timeout) {
         reject(new Error(`mermaid is not defined within the timeout period.`))
       } else {
-        setTimeout(checkMerMaidCode, interval)
+        setTimeout(checkMermaidCode, interval)
       }
     }
-    checkMerMaidCode()
+    checkMermaidCode()
   })
 }
+
 const useMermaidEffect = () => {
+  const [scheme] = useScheme()
   const [memoMermaid, setMemoMermaid] = useState<Map<number, string>>(new Map())
 
-  const { data, isFetched } = useQuery({
-    queryKey: queryKey.scheme(),
-    enabled: false,
-  })
-
   useEffect(() => {
-    if (!isFetched) return
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: (data as "dark" | "light") === "dark" ? "dark" : "default",
-    })
+    if (typeof window === "undefined") return
 
-    if (!document) return
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: scheme === "dark" ? "dark" : "default",
+      securityLevel: "loose",
+    })
 
     waitForMermaid()
       .then(async (elements) => {
-        const promises = Array.from(elements)
-          .filter((elements) => elements.tagName === "PRE")
-          .map(async (element, i) => {
-            if (memoMermaid.get(i) !== undefined) {
-              const svg = await mermaid
-                .render("mermaid" + i, memoMermaid.get(i) || "")
-                .then((res) => res.svg)
-              element.animate(
-                [
-                  { easing: "ease-in", opacity: 0 },
-                  { easing: "ease-out", opacity: 1 },
-                ],
-                { duration: 300, fill: "both" }
-              )
-              element.innerHTML = svg
-              return
-            }
-            const svg = await mermaid
-              .render("mermaid" + i, element.textContent || "")
-              .then((res) => res.svg)
-            setMemoMermaid(memoMermaid.set(i, element.textContent ?? ""))
-            element.innerHTML = svg
-          })
+        const promises = elements.map(async (element, i) => {
+          const targetContainer =
+            element.tagName === "CODE" && element.parentElement?.tagName === "PRE"
+              ? (element.parentElement as HTMLElement)
+              : element
+
+          const codeContent = memoMermaid.get(i) || element.textContent || ""
+          if (!codeContent.trim()) return
+
+          if (!memoMermaid.has(i)) {
+            setMemoMermaid((prev) => new Map(prev).set(i, codeContent))
+          }
+
+          try {
+            const id = `mermaid-${i}-${Math.random().toString(36).substring(2, 9)}`
+            const { svg } = await mermaid.render(id, codeContent)
+            targetContainer.innerHTML = svg
+            targetContainer.style.backgroundColor = "transparent"
+            targetContainer.style.display = "flex"
+            targetContainer.style.justifyContent = "center"
+            targetContainer.style.overflow = "auto"
+          } catch (err) {
+            console.warn("Mermaid render error:", err)
+          }
+        })
         await Promise.all(promises)
       })
-      .catch((error) => {
-        console.warn(error)
+      .catch(() => {
+        // No mermaid elements on page or timeout
       })
-  }, [data, isFetched])
+  }, [scheme])
 
   return
 }
