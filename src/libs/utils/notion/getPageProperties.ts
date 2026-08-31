@@ -4,6 +4,8 @@ import { BlockMap, CollectionPropertySchemaMap } from "notion-types"
 import { customMapImageUrl } from "./customMapImageUrl"
 import { CONFIG } from "site.config"
 
+const userCache = new Map<string, any>()
+
 async function getPageProperties(
   id: string,
   block: BlockMap,
@@ -37,7 +39,7 @@ async function getPageProperties(
           const dateProperty: any = getDateValue(val)
           delete dateProperty.type
           properties[schema[key].name] = dateProperty
-          break
+          break;
         }
         case "select": {
           const selects = getTextContent(val)
@@ -58,22 +60,38 @@ async function getPageProperties(
 
           const users = []
           for (let i = 0; i < rawUsers.length; i++) {
-            if (rawUsers[i][0][1]) {
+            if (rawUsers[i][0] && rawUsers[i][0][1]) {
               const userId = rawUsers[i][0]
-              const res: any = await api.getUsers(userId)
-              const resValue =
-                res?.recordMapWithRoles?.notion_user?.[userId[1]]?.value
-              const user = {
-                id: resValue?.id ?? userId[1] ?? null,
-                name:
-                  resValue?.name ||
-                  [resValue?.family_name, resValue?.given_name]
-                    .filter(Boolean)
-                    .join("") ||
-                  CONFIG.profile.name,
-                profile_photo: resValue?.profile_photo || null,
+              const userKey = userId[1]
+              if (userCache.has(userKey)) {
+                users.push(userCache.get(userKey))
+                continue
               }
-              users.push(user)
+              try {
+                const res: any = await api.getUsers(userId)
+                const resValue =
+                  res?.recordMapWithRoles?.notion_user?.[userKey]?.value
+                const user = {
+                  id: resValue?.id ?? userKey ?? null,
+                  name:
+                    resValue?.name ||
+                    [resValue?.family_name, resValue?.given_name]
+                      .filter(Boolean)
+                      .join("") ||
+                    CONFIG.profile.name,
+                  profile_photo: resValue?.profile_photo || null,
+                }
+                userCache.set(userKey, user)
+                users.push(user)
+              } catch (error) {
+                const fallbackUser = {
+                  id: userKey ?? null,
+                  name: CONFIG.profile.name,
+                  profile_photo: null,
+                }
+                userCache.set(userKey, fallbackUser)
+                users.push(fallbackUser)
+              }
             }
           }
           properties[schema[key].name] = users
