@@ -10,12 +10,15 @@ const waitForMermaid = (interval = 100, timeout = 5000) => {
     const startTime = Date.now()
 
     const checkMermaidCode = () => {
-      const elements = Array.from(
-        document.querySelectorAll("code.language-mermaid, pre.language-mermaid, .notion-code.language-mermaid, pre:has(code.language-mermaid)")
-      ) as HTMLElement[]
+      const pres = Array.from(document.querySelectorAll("pre")).filter((pre) => {
+        return (
+          pre.classList.contains("language-mermaid") ||
+          pre.querySelector("code.language-mermaid") !== null
+        )
+      }) as HTMLElement[]
 
-      if (mermaid.render !== undefined && elements.length > 0) {
-        resolve(elements)
+      if (mermaid.render !== undefined && pres.length > 0) {
+        resolve(pres)
       } else if (Date.now() - startTime >= timeout) {
         reject(new Error(`mermaid is not defined within the timeout period.`))
       } else {
@@ -42,28 +45,33 @@ const useMermaidEffect = () => {
     waitForMermaid()
       .then(async (elements) => {
         const promises = elements.map(async (element, i) => {
-          const targetContainer =
-            element.tagName === "CODE" && element.parentElement?.tagName === "PRE"
-              ? (element.parentElement as HTMLElement)
-              : element
+          const rawText = memoMermaid.get(i) || element.textContent || ""
+          const codeContent = rawText
+            .replace(/&gt;/g, ">")
+            .replace(/&lt;/g, "<")
+            .replace(/&quot;/g, '"')
+            .replace(/&amp;/g, "&")
+            .replace(/\u00A0/g, " ")
+            .trim()
 
-          const codeContent = memoMermaid.get(i) || element.textContent || ""
-          if (!codeContent.trim()) return
+          if (!codeContent) return
 
           if (!memoMermaid.has(i)) {
-            setMemoMermaid((prev) => new Map(prev).set(i, codeContent))
+            setMemoMermaid((prev) => new Map(prev).set(i, rawText))
           }
 
           try {
             const id = `mermaid-${i}-${Math.random().toString(36).substring(2, 9)}`
             const { svg } = await mermaid.render(id, codeContent)
-            targetContainer.innerHTML = svg
-            targetContainer.style.backgroundColor = "transparent"
-            targetContainer.style.display = "flex"
-            targetContainer.style.justifyContent = "center"
-            targetContainer.style.overflow = "auto"
+            element.innerHTML = svg
+            element.style.backgroundColor = "transparent"
+            element.style.display = "flex"
+            element.style.justifyContent = "center"
+            element.style.overflow = "auto"
           } catch (err) {
             console.warn("Mermaid render error:", err)
+            // Remove error elements appended by mermaid to document body
+            document.querySelectorAll(`[id^="dmermaid"]`).forEach((el) => el.remove())
           }
         })
         await Promise.all(promises)
