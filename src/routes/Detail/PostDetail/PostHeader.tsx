@@ -76,11 +76,10 @@ const PostHeader: React.FC<Props> = ({ data }) => {
             </div>
           )}
           {data.thumbnail && (
-            <div className="relative mt-6 overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 pb-[50%] dark:border-zinc-800 dark:bg-zinc-900">
-              <Image
+            <div className="mt-6 flex justify-center overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900">
+              <img
                 src={data.thumbnail}
-                className="object-cover"
-                fill
+                className="h-auto max-h-[550px] w-full object-contain"
                 alt={data.title}
               />
             </div>
