@@ -34,7 +34,7 @@ module.exports = {
       },
       maxWidth: {
         prose: "42rem",
-        shell: "56rem",
+        shell: "64rem",
       },
     },
   },

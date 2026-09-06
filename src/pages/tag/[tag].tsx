@@ -129,8 +129,6 @@ TagArchivePage.getLayout = (page) => {
 export default TagArchivePage
 
 const StyledWrapper = styled.div`
-  max-width: 42rem;
-  margin: 0 auto;
   padding: 3rem 0 4rem;
 
   > .header {
@@ -156,7 +154,19 @@ const StyledWrapper = styled.div`
     }
   }
 
+  > .list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   > .list .empty {
+    grid-column: 1 / -1;
     padding: 2.5rem 0;
     font-size: 0.8125rem;
     color: rgb(var(--subtle));
