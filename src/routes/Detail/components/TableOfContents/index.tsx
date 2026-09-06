@@ -129,18 +129,18 @@ const StyledFloating = styled.nav`
     display: block;
     position: fixed;
     top: 7rem;
-    left: calc(50% + 29.5rem);
+    left: calc(50% + 23rem);
     width: 15rem;
     max-height: calc(100vh - 10rem);
     overflow-y: auto;
   }
 
   .label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: ${({ theme }) => theme.colors.gray11};
+    color: rgb(var(--subtle));
     margin-bottom: 0.75rem;
   }
 
@@ -148,63 +148,60 @@ const StyledFloating = styled.nav`
     list-style: none;
     margin: 0;
     padding: 0;
-    border-left: 1px solid ${({ theme }) => theme.colors.gray6};
+    border-left: 1px solid rgb(var(--line));
   }
 
   li {
     &[data-level="2"] a {
-      padding-left: 1rem;
+      padding-left: 1.25rem;
     }
     &[data-level="3"] a {
-      padding-left: 2rem;
+      padding-left: 2.25rem;
     }
   }
 
   a {
     display: block;
-    padding: 0.25rem 0 0.25rem 0.5rem;
+    padding: 0.3125rem 0 0.3125rem 0.75rem;
     margin-left: -1px;
     border-left: 1px solid transparent;
     font-size: 0.8125rem;
-    line-height: 1.25rem;
-    color: ${({ theme }) => theme.colors.gray11};
+    line-height: 1.35;
+    color: rgb(var(--subtle));
     cursor: pointer;
-    transition:
-      color 0.15s ease,
-      border-color 0.15s ease;
+    transition: color 0.15s ease, border-color 0.15s ease;
 
     &:hover {
-      color: ${({ theme }) => theme.colors.gray12};
+      color: rgb(var(--fg));
     }
 
     &[data-active="true"] {
-      color: ${({ theme }) => theme.colors.indigo11};
-      border-left-color: ${({ theme }) => theme.colors.indigo9};
+      color: rgb(var(--accent));
+      border-left-color: rgb(var(--accent));
       font-weight: 600;
     }
   }
 `
 
 const StyledInline = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 
   @media (min-width: 1440px) {
     display: none;
   }
 
   details {
-    border: 1px solid ${({ theme }) => theme.colors.gray6};
+    border: 1px solid rgb(var(--line));
     border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    background-color: ${({ theme }) =>
-      theme.scheme === "light" ? theme.colors.gray2 : theme.colors.gray5};
+    padding: 0.875rem 1rem;
+    background-color: rgb(var(--surface));
   }
 
   summary {
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 600;
-    color: ${({ theme }) => theme.colors.gray12};
+    color: rgb(var(--fg));
   }
 
   ul {
@@ -215,13 +212,13 @@ const StyledInline = styled.div`
 
   a {
     display: block;
-    padding: 0.25rem 0;
+    padding: 0.3125rem 0;
     font-size: 0.8125rem;
-    color: ${({ theme }) => theme.colors.gray11};
+    color: rgb(var(--muted));
     cursor: pointer;
 
     &:hover {
-      color: ${({ theme }) => theme.colors.gray12};
+      color: rgb(var(--accent));
     }
   }
 

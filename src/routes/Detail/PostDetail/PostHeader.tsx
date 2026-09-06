@@ -4,6 +4,7 @@ import { TPost } from "src/types"
 import { ExtendedRecordMap } from "notion-types"
 import { formatDate } from "src/libs/utils"
 import Image from "next/image"
+import Link from "next/link"
 import React from "react"
 
 type Props = {
@@ -31,52 +32,68 @@ const getReadingTime = (recordMap?: ExtendedRecordMap) => {
 
 const PostHeader: React.FC<Props> = ({ data }) => {
   const readingTime = getReadingTime(data.recordMap)
+  const category = data.category?.[0]
+  // PublicOnDetail은 목록에 노출되지 않으므로 카테고리 링크도 걸지 않는다.
+  const categoryLinked = category && data.status?.[0] !== "PublicOnDetail"
+
   return (
-    <div className="pb-6">
-      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 md:text-3xl">
-        {data.title}
-      </h1>
+    <header className="pb-8">
+      {category && (
+        <p className="eyebrow mb-3">
+          {categoryLinked ? (
+            <Link
+              href={`/category/${encodeURIComponent(category)}`}
+              className="transition-colors hover:text-accent"
+            >
+              {category}
+            </Link>
+          ) : (
+            category
+          )}
+        </p>
+      )}
+      <h1 className="text-3xl font-bold text-fg">{data.title}</h1>
       {data.type[0] !== "Paper" && (
-        <nav className="mt-4 text-zinc-500 dark:text-zinc-400">
-          <div className="flex flex-wrap items-center gap-3 text-[13px]">
-            {data.author && data.author[0] && data.author[0].name && (
+        <>
+          <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted">
+            {data.author?.[0]?.name && (
               <>
                 <div className="flex items-center gap-2">
                   <Image
-                    className="rounded-full"
+                    className="rounded-full border border-line"
                     src={data.author[0].profile_photo || CONFIG.profile.image}
                     alt="profile_photo"
                     width={24}
                     height={24}
                   />
-                  <span className="font-medium text-zinc-700 dark:text-zinc-200">
+                  <span className="font-medium text-fg">
                     {data.author[0].name}
                   </span>
                 </div>
-                <div className="h-3 w-px bg-zinc-200 dark:bg-zinc-800" />
+                <span className="h-3 w-px bg-line-strong" aria-hidden />
               </>
             )}
-            <div className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="font-mono text-xs">
               {formatDate(
                 data?.date?.start_date || data.createdTime,
                 CONFIG.lang
               )}
-            </div>
+            </span>
             {readingTime && (
-              <span className="text-zinc-400 dark:text-zinc-500">
+              <span className="font-mono text-xs text-subtle">
                 · {readingTime} min read
               </span>
             )}
           </div>
           {data.tags && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
+            <div className="mt-4 flex flex-wrap gap-1.5">
               {data.tags.map((tag: string) => (
                 <Tag key={tag}>{tag}</Tag>
               ))}
             </div>
           )}
           {data.thumbnail && (
-            <div className="mt-6 flex justify-center overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="mt-8 flex justify-center overflow-hidden rounded-xl border border-line bg-elevated">
               <img
                 src={data.thumbnail}
                 className="h-auto max-h-[550px] w-full object-contain"
@@ -84,9 +101,9 @@ const PostHeader: React.FC<Props> = ({ data }) => {
               />
             </div>
           )}
-        </nav>
+        </>
       )}
-    </div>
+    </header>
   )
 }
 

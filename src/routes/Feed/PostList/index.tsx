@@ -67,9 +67,9 @@ const PostList: React.FC<Props> = ({ q }) => {
   }, [filteredPosts])
 
   return (
-    <div className="mt-2">
+    <div>
       {!filteredPosts.length && (
-        <p className="py-8 text-sm text-zinc-400">아직 노트가 없어요.</p>
+        <p className="py-10 text-sm text-subtle">아직 노트가 없어요.</p>
       )}
       <motion.div
         initial={reduceMotion ? false : "hidden"}
@@ -82,10 +82,10 @@ const PostList: React.FC<Props> = ({ q }) => {
         }}
       >
         {groups.map(([month, posts]) => (
-          <section key={month} className="relative pb-4 pl-5">
-            <span className="absolute left-0 top-[9px] h-[9px] w-[9px] rounded-full bg-accent" />
-            <span className="absolute bottom-2 left-[4px] top-7 w-px bg-zinc-200 dark:bg-zinc-800" />
-            <h3 className="mb-1 font-mono text-xs font-medium text-zinc-400 dark:text-zinc-600">
+          <section key={month} className="relative pb-6 pl-6">
+            <span className="absolute left-0 top-[7px] h-2 w-2 rounded-full bg-accent ring-4 ring-bg" />
+            <span className="absolute bottom-0 left-[3.5px] top-6 w-px bg-line" />
+            <h3 className="eyebrow mb-1.5">
               {MONTH_FORMAT.format(new Date(`${month}-15`))}
             </h3>
             {posts.map((post) => (

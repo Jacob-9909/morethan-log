@@ -169,8 +169,7 @@ const StyledModal = styled.div`
   width: min(560px, calc(100% - 2rem));
   border-radius: 1rem;
   overflow: hidden;
-  background-color: ${({ theme }) =>
-    theme.scheme === "light" ? "white" : theme.colors.gray3};
+  background-color: rgb(var(--surface));
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
@@ -180,10 +179,10 @@ const StyledModal = styled.div`
     gap: 0.5rem;
     padding-left: 1rem;
     padding-right: 1rem;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray6};
+    border-bottom: 1px solid rgb(var(--line));
 
     > .icon {
-      color: ${({ theme }) => theme.colors.gray10};
+      color: rgb(var(--subtle));
     }
 
     > input {
@@ -194,10 +193,10 @@ const StyledModal = styled.div`
       outline-style: none;
       font-size: 1rem;
       background-color: transparent;
-      color: ${({ theme }) => theme.colors.gray12};
+      color: rgb(var(--fg));
 
       ::placeholder {
-        color: ${({ theme }) => theme.colors.gray9};
+        color: rgb(var(--subtle));
       }
     }
 
@@ -207,8 +206,8 @@ const StyledModal = styled.div`
       font-family: inherit;
       font-size: 0.75rem;
       line-height: 1.25rem;
-      color: ${({ theme }) => theme.colors.gray10};
-      background-color: ${({ theme }) => theme.colors.gray4};
+      color: rgb(var(--subtle));
+      background-color: rgb(var(--elevated));
     }
   }
 
@@ -221,7 +220,7 @@ const StyledModal = styled.div`
       text-align: center;
       font-size: 0.875rem;
       line-height: 1.25rem;
-      color: ${({ theme }) => theme.colors.gray10};
+      color: rgb(var(--subtle));
     }
 
     > .item {
@@ -233,7 +232,7 @@ const StyledModal = styled.div`
       cursor: pointer;
 
       &[data-active="true"] {
-        background-color: ${({ theme }) => theme.colors.gray4};
+        background-color: rgb(var(--elevated));
       }
 
       > .title {
@@ -244,7 +243,7 @@ const StyledModal = styled.div`
         font-size: 0.875rem;
         line-height: 1.25rem;
         font-weight: 500;
-        color: ${({ theme }) => theme.colors.gray12};
+        color: rgb(var(--fg));
       }
 
       > .tags {
@@ -261,8 +260,8 @@ const StyledModal = styled.div`
           font-size: 0.75rem;
           line-height: 1rem;
           white-space: nowrap;
-          color: ${({ theme }) => theme.colors.gray10};
-          background-color: ${({ theme }) => theme.colors.gray5};
+          color: rgb(var(--subtle));
+          background-color: rgb(var(--elevated));
         }
       }
     }

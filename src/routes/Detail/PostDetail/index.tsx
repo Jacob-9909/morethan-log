@@ -2,8 +2,6 @@ import React from "react"
 import PostHeader from "./PostHeader"
 import Footer from "./PostFooter"
 import CommentBox from "./CommentBox"
-import Category from "src/components/Category"
-import styled from "@emotion/styled"
 import NotionRenderer from "../components/NotionRenderer"
 import TableOfContents from "../components/TableOfContents"
 import usePostQuery from "src/hooks/usePostQuery"
@@ -15,43 +13,22 @@ const PostDetail: React.FC<Props> = () => {
 
   if (!data) return null
 
-  const category = (data.category && data.category?.[0]) || undefined
-
   return (
-    <StyledWrapper>
-      <article>
-        {category && (
-          <div css={{ marginBottom: "0.5rem" }}>
-            <Category readOnly={data.status?.[0] === "PublicOnDetail"}>
-              {category}
-            </Category>
-          </div>
-        )}
-        {data.type[0] === "Post" && <PostHeader data={data} />}
-        {data.type[0] === "Post" && <TableOfContents recordMap={data.recordMap} />}
-        <div>
-          <NotionRenderer recordMap={data.recordMap} />
-        </div>
-        {data.type[0] === "Post" && (
-          <>
-            <Footer />
-            <CommentBox data={data} />
-          </>
-        )}
-      </article>
-    </StyledWrapper>
+    <article className="mx-auto max-w-prose">
+      {data.type[0] === "Post" && <PostHeader data={data} />}
+      {data.type[0] === "Post" && (
+        <TableOfContents recordMap={data.recordMap} />
+      )}
+      <NotionRenderer recordMap={data.recordMap} />
+      {data.type[0] === "Post" && (
+        <>
+          <hr className="mt-16" />
+          <Footer />
+          <CommentBox data={data} />
+        </>
+      )}
+    </article>
   )
 }
 
 export default PostDetail
-
-const StyledWrapper = styled.div`
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-  max-width: 42rem;
-  margin: 0 auto;
-  > article {
-    margin: 0 auto;
-    max-width: 42rem;
-  }
-`

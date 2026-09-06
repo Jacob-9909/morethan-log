@@ -14,17 +14,17 @@ const Header: React.FC<Props> = ({ fullWidth }) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-zinc-200/70 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80">
+      <header className="sticky top-0 z-30 border-b border-line/70 bg-bg/70 backdrop-blur-md">
         <div
           data-full-width={fullWidth}
-          className="mx-auto flex h-14 w-full max-w-3xl items-center justify-between px-4 md:px-6 lg:max-w-4xl"
+          className="mx-auto flex h-14 w-full max-w-shell items-center justify-between px-4 md:px-6"
         >
           <Logo />
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             <button
               onClick={() => setIsPaletteOpen(true)}
               aria-label="게시글 검색"
-              className="rounded-md p-2 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+              className="rounded-lg p-2 text-subtle transition-colors hover:bg-elevated hover:text-fg"
             >
               <FiSearch size={16} />
             </button>

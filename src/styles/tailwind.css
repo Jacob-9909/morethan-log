@@ -3,50 +3,111 @@
 @tailwind utilities;
 
 @layer base {
-  ::selection {
-    @apply bg-teal-200 text-teal-900;
+  /* 단일 진실 원천: 색 값은 여기서만 정의하고 tailwind.config가 참조한다. */
+  :root {
+    color-scheme: light;
+    --bg: 250 250 250;
+    --surface: 255 255 255;
+    --elevated: 244 244 245;
+    --fg: 24 24 27;
+    --muted: 82 82 91;
+    --subtle: 113 113 122;
+    --line: 228 228 231;
+    --line-strong: 212 212 216;
+    --accent: 15 118 110;
+    --accent-solid: 15 118 110;
+    --accent-on: 255 255 255;
+    --accent-soft: 240 253 250;
   }
 
+  [data-scheme="dark"] {
+    color-scheme: dark;
+    --bg: 9 9 11;
+    --surface: 24 24 27;
+    --elevated: 39 39 42;
+    --fg: 250 250 250;
+    --muted: 161 161 170;
+    --subtle: 113 113 122;
+    --line: 39 39 42;
+    --line-strong: 63 63 70;
+    --accent: 45 212 191;
+    --accent-solid: 20 184 166;
+    --accent-on: 4 47 46;
+    --accent-soft: 19 78 74;
+  }
+
+  ::selection {
+    @apply bg-accent/25 text-fg;
+  }
+
+  /* Global에서 button/a의 outline을 지우므로 키보드 포커스를 여기서 복구한다. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent/60 ring-offset-2 ring-offset-bg;
+    border-radius: 0.25rem;
+  }
+
+  /* 본문 타이포 (react-notion-x) */
   .notion {
-    @apply text-[15px] leading-relaxed text-zinc-700 dark:text-zinc-300 md:text-base;
+    @apply text-base text-fg/85;
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 
   .notion-h1 {
-    @apply mb-3 mt-12 text-[22px] font-bold tracking-tight text-zinc-900 dark:text-zinc-50;
+    @apply mb-3 mt-12 text-2xl font-bold text-fg;
   }
 
   .notion-h2 {
-    @apply mb-3 mt-10 border-b border-zinc-100 pb-1.5 text-[19px] font-bold tracking-tight text-zinc-800 dark:border-zinc-800 dark:text-zinc-100;
+    @apply mb-3 mt-10 border-b border-line pb-2 text-xl font-bold text-fg;
   }
 
   .notion-h3 {
-    @apply mb-2 mt-8 text-[17px] font-semibold tracking-tight text-zinc-800 dark:text-zinc-100;
+    @apply mb-2 mt-8 text-lg font-semibold text-fg;
   }
 
   .notion-text {
-    @apply my-3 leading-[1.85];
+    @apply my-4 leading-[1.9];
   }
 
   .notion-inline-code {
-    @apply rounded bg-teal-50 px-1.5 py-0.5 font-mono text-[0.85em] text-teal-700 dark:bg-teal-950/60 dark:text-teal-300;
+    @apply rounded border border-accent/15 bg-accent/10 px-1.5 py-0.5 font-mono text-[0.85em] text-accent;
   }
 
   .notion-link {
-    @apply text-accent underline decoration-accent/30 underline-offset-2 hover:decoration-accent;
+    @apply text-accent decoration-accent/30 underline underline-offset-[3px] transition-colors hover:decoration-accent;
   }
 
   .notion-list-disc,
   .notion-list-decimal {
-    @apply my-3;
+    @apply my-4 leading-[1.9];
   }
 
   .notion-code {
-    @apply font-mono !text-[13px];
+    @apply rounded-xl border border-line font-mono !text-sm;
+  }
+
+  .notion-quote {
+    @apply border-l-2 border-accent/60 py-1 pl-4 text-muted;
+  }
+
+  .notion-callout,
+  .notion-table {
+    @apply border-line;
+  }
+
+  .notion-hr {
+    @apply my-10 border-line;
+  }
+
+  .notion-asset-wrapper img,
+  .notion-asset-wrapper .notion-image {
+    @apply rounded-xl;
   }
 }
 
 @layer components {
-  .note-heading {
-    @apply font-bold tracking-tight text-zinc-800 dark:text-zinc-100;
+  /* 사이드바·메타 영역의 소제목 라벨 */
+  .eyebrow {
+    @apply font-mono text-2xs uppercase tracking-[0.14em] text-subtle;
   }
 }

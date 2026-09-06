@@ -18,13 +18,10 @@ const Feed: React.FC<Props> = () => {
   const posts = usePostsQuery()
   const reduceMotion = useReducedMotion()
 
-  const currentCategory =
-    `${router.query.category || ``}` || DEFAULT_CATEGORY
+  const currentCategory = `${router.query.category || ``}` || DEFAULT_CATEGORY
   const categories = [
     ...new Set(
-      posts
-        .map((p) => p.category?.[0])
-        .filter((c): c is string => Boolean(c))
+      posts.map((p) => p.category?.[0]).filter((c): c is string => Boolean(c))
     ),
   ]
 
@@ -45,10 +42,10 @@ const Feed: React.FC<Props> = () => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-12 md:py-16 lg:grid lg:max-w-4xl lg:grid-cols-[1fr_190px] lg:gap-14">
+    <div className="mx-auto w-full max-w-2xl px-4 py-12 md:py-16 lg:grid lg:max-w-shell lg:grid-cols-[1fr_200px] lg:gap-16">
       <div className="min-w-0">
         <ProfileIntro />
-        <div className="mt-10">
+        <div className="mt-8">
           <SearchInput value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
         <CategoryChips
@@ -86,7 +83,7 @@ const CategoryChips: React.FC<ChipsProps> = ({
       initial={reduceMotion ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="mb-4 mt-4 flex flex-wrap gap-1.5"
+      className="mt-6 flex flex-wrap gap-1.5"
     >
       {[DEFAULT_CATEGORY, ...categories].map((category) => {
         const active = category === current
@@ -94,10 +91,11 @@ const CategoryChips: React.FC<ChipsProps> = ({
           <button
             key={category}
             onClick={() => onSelect(category)}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+            aria-pressed={active}
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
               active
-                ? "bg-accent text-white"
-                : "text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                ? "bg-accent-solid text-accent-on"
+                : "bg-elevated/60 text-muted hover:bg-elevated hover:text-fg"
             }`}
           >
             {category}
@@ -111,10 +109,9 @@ const CategoryChips: React.FC<ChipsProps> = ({
 const ProfileIntro = () => {
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-        노트
-      </h1>
-      <p className="mt-2 text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+      <p className="eyebrow">Note</p>
+      <h1 className="mt-2 text-3xl font-bold text-fg">노트</h1>
+      <p className="mt-3 max-w-md text-base leading-relaxed text-muted">
         공부한 것을 기록합니다. 배운 건 짧게, 남은 건 오래.
       </p>
     </div>

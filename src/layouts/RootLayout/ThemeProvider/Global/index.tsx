@@ -1,27 +1,31 @@
-import { Global as _Global, css, useTheme } from "@emotion/react"
+import { Global as _Global, css } from "@emotion/react"
 
-import { ThemeProvider as _ThemeProvider } from "@emotion/react"
 import { pretendard } from "src/assets"
 
 export const Global = () => {
-  const theme = useTheme()
-
   return (
     <_Global
       styles={css`
+        html {
+          scroll-behavior: smooth;
+        }
+
         body {
           margin: 0;
           padding: 0;
-          color: ${theme.colors.gray12};
-          background-color: ${theme.colors.gray2};
+          /* 색 값은 tailwind.css의 토큰 한 곳에서만 나온다. */
+          color: rgb(var(--fg));
+          background-color: rgb(var(--bg));
           font-family: ${pretendard.style.fontFamily};
           font-weight: ${pretendard.style.fontWeight};
           font-style: ${pretendard.style.fontStyle};
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          font-feature-settings: "ss01", "cv01";
           transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         * {
-          color-scheme: ${theme.scheme};
           box-sizing: border-box;
         }
 
@@ -34,6 +38,8 @@ export const Global = () => {
           margin: 0;
           font-weight: inherit;
           font-style: inherit;
+          /* 한국어 줄바꿈: 어절 단위로 끊는다. */
+          word-break: keep-all;
         }
 
         a {
@@ -45,19 +51,16 @@ export const Global = () => {
           padding: 0;
         }
 
-        // init button
         button {
           all: unset;
           cursor: pointer;
         }
 
-        // init input
         input {
           all: unset;
           box-sizing: border-box;
         }
 
-        // init textarea
         textarea {
           border: none;
           background-color: transparent;
@@ -72,7 +75,21 @@ export const Global = () => {
           width: 100%;
           border: none;
           margin: 0;
-          border-top: 1px solid ${theme.colors.gray6};
+          border-top: 1px solid rgb(var(--line));
+        }
+
+        ::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+          background-color: rgb(var(--line-strong));
+          border: 3px solid transparent;
+          background-clip: content-box;
+          border-radius: 999px;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
         }
       `}
     />

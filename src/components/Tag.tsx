@@ -1,4 +1,3 @@
-import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import React from "react"
 
@@ -9,28 +8,14 @@ type Props = {
 const Tag: React.FC<Props> = ({ children }) => {
   const router = useRouter()
 
-  const handleClick = (value: string) => {
-    router.push(`/tag/${encodeURIComponent(value)}`)
-  }
   return (
-    <StyledWrapper onClick={() => handleClick(children)}>
-      {children}
-    </StyledWrapper>
+    <button
+      onClick={() => router.push(`/tag/${encodeURIComponent(children)}`)}
+      className="rounded-full border border-line bg-elevated/60 px-2.5 py-1 font-mono text-2xs text-muted transition-colors hover:border-accent/40 hover:text-accent"
+    >
+      #{children}
+    </button>
   )
 }
 
 export default Tag
-
-const StyledWrapper = styled.div`
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 400;
-  color: ${({ theme }) => theme.colors.gray10};
-  background-color: ${({ theme }) => theme.colors.gray5};
-  cursor: pointer;
-`

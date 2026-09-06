@@ -22,14 +22,10 @@ const Detail: React.FC<Props> = () => {
 export default Detail
 
 const StyledWrapper = styled.div`
-  padding: 2rem 0;
+  padding: 3rem 0 4rem;
 
-  &[data-type="Paper"] {
-    padding: 40px 0;
-  }
-  /** Reference: https://github.com/chriskempson/tomorrow-theme **/
   code[class*="language-mermaid"],
   pre[class*="language-mermaid"] {
-    background-color: ${({ theme }) => theme.colors.gray5};
+    background-color: rgb(var(--elevated));
   }
 `

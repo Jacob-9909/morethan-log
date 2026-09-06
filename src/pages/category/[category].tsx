@@ -107,7 +107,10 @@ const CategoryArchivePage: NextPageWithLayout<Props> = ({
       <MetaConfig {...meta} />
       <StyledWrapper>
         <div className="header">
-          <div className="title">{category}</div>
+          <div>
+            <p className="eyebrow">Category</p>
+            <h1 className="title">{category}</h1>
+          </div>
           <div className="count">{archivePosts.length} Posts</div>
         </div>
         <div className="list">
@@ -130,37 +133,36 @@ CategoryArchivePage.getLayout = (page) => {
 export default CategoryArchivePage
 
 const StyledWrapper = styled.div`
-  padding: 2rem 0;
-
-  @media (max-width: 768px) {
-    padding: 0.5rem 0;
-  }
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 3rem 0 4rem;
 
   > .header {
     display: flex;
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
     justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray6};
+    align-items: flex-end;
+    border-bottom: 1px solid rgb(var(--line));
 
-    > .title {
-      font-size: 1.25rem;
-      line-height: 1.75rem;
+    .title {
+      margin-top: 0.5rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: ${({ theme }) => theme.colors.gray12};
+      letter-spacing: -0.019em;
+      color: rgb(var(--fg));
     }
 
     > .count {
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-      color: ${({ theme }) => theme.colors.gray10};
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.75rem;
+      color: rgb(var(--subtle));
     }
   }
 
-  > .list {
-    .empty {
-      color: ${({ theme }) => theme.colors.gray10};
-    }
+  > .list .empty {
+    padding: 2.5rem 0;
+    font-size: 0.8125rem;
+    color: rgb(var(--subtle));
   }
 `

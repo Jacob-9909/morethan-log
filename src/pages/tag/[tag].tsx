@@ -103,7 +103,10 @@ const TagArchivePage: NextPageWithLayout<Props> = ({ tag, posts }) => {
       <MetaConfig {...meta} />
       <StyledWrapper>
         <div className="header">
-          <div className="pill">{tag}</div>
+          <div>
+            <p className="eyebrow">Tag</p>
+            <h1 className="title">#{tag}</h1>
+          </div>
           <div className="count">{archivePosts.length} Posts</div>
         </div>
         <div className="list">
@@ -126,44 +129,36 @@ TagArchivePage.getLayout = (page) => {
 export default TagArchivePage
 
 const StyledWrapper = styled.div`
-  padding: 2rem 0;
-
-  @media (max-width: 768px) {
-    padding: 0.5rem 0;
-  }
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 3rem 0 4rem;
 
   > .header {
     display: flex;
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
     justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.gray6};
+    align-items: flex-end;
+    border-bottom: 1px solid rgb(var(--line));
 
-    > .pill {
-      display: inline-block;
-      padding-top: 0.25rem;
-      padding-bottom: 0.25rem;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-      border-radius: 50px;
-      font-size: 1rem;
-      line-height: 1.5rem;
-      font-weight: 500;
-      color: ${({ theme }) => theme.colors.gray12};
-      background-color: ${({ theme }) => theme.colors.gray4};
+    .title {
+      margin-top: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.019em;
+      color: rgb(var(--fg));
     }
 
     > .count {
-      font-size: 0.875rem;
-      line-height: 1.25rem;
-      color: ${({ theme }) => theme.colors.gray10};
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.75rem;
+      color: rgb(var(--subtle));
     }
   }
 
-  > .list {
-    .empty {
-      color: ${({ theme }) => theme.colors.gray10};
-    }
+  > .list .empty {
+    padding: 2.5rem 0;
+    font-size: 0.8125rem;
+    color: rgb(var(--subtle));
   }
 `

@@ -1,16 +1,15 @@
-import styled from "@emotion/styled"
 import Link from "next/link"
 
 const NavBar: React.FC = () => {
   const links = [{ id: 1, name: "About", to: "/about" }]
   return (
     <nav className="flex-shrink-0">
-      <ul className="flex">
+      <ul className="flex list-none">
         {links.map((link) => (
           <li key={link.id}>
             <Link
               href={link.to}
-              className="ml-1 rounded-md px-2 py-1.5 text-[13px] text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+              className="ml-0.5 rounded-lg px-2.5 py-1.5 text-sm text-subtle transition-colors hover:bg-elevated hover:text-fg"
             >
               {link.name}
             </Link>
