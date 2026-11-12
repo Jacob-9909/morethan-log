@@ -93,7 +93,7 @@ const PostHeader: React.FC<Props> = ({ data }) => {
             </div>
           )}
           {data.thumbnail && (
-            <div className="mt-8 flex justify-center overflow-hidden rounded-xl border border-line bg-elevated">
+            <div className="mt-8 flex justify-center overflow-hidden rounded-md border border-line bg-elevated">
               <img
                 src={data.thumbnail}
                 className="h-auto max-h-[550px] w-full object-contain"

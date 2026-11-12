@@ -15,7 +15,7 @@ const ThemeToggle: React.FC<Props> = () => {
     <button
       onClick={handleClick}
       aria-label="Toggle color scheme"
-      className="flex items-center justify-center rounded-lg p-2 text-subtle transition-colors hover:bg-elevated hover:text-fg"
+      className="flex items-center justify-center rounded-md p-2 text-subtle transition-colors hover:bg-elevated hover:text-fg"
     >
       {scheme === "light" ? <FiSun size={16} /> : <FiMoon size={16} />}
     </button>

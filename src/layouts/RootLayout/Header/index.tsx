@@ -24,7 +24,7 @@ const Header: React.FC<Props> = ({ fullWidth }) => {
             <button
               onClick={() => setIsPaletteOpen(true)}
               aria-label="게시글 검색"
-              className="rounded-lg p-2 text-subtle transition-colors hover:bg-elevated hover:text-fg"
+              className="rounded-md p-2 text-subtle transition-colors hover:bg-elevated hover:text-fg"
             >
               <FiSearch size={16} />
             </button>

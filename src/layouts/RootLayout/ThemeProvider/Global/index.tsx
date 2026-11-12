@@ -1,11 +1,16 @@
 import { Global as _Global, css } from "@emotion/react"
 
-import { pretendard } from "src/assets"
+import { jetbrainsMono, pretendard } from "src/assets"
 
 export const Global = () => {
   return (
     <_Global
       styles={css`
+        :root {
+          /* tailwind의 font-mono가 이 변수를 쓴다. */
+          --font-mono: ${jetbrainsMono.style.fontFamily};
+        }
+
         html {
           scroll-behavior: smooth;
         }

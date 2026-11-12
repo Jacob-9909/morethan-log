@@ -136,7 +136,7 @@ const StyledFloating = styled.nav`
   }
 
   .label {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: var(--font-mono), ui-monospace, monospace;
     font-size: 0.6875rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -192,7 +192,7 @@ const StyledInline = styled.div`
 
   details {
     border: 1px solid rgb(var(--line));
-    border-radius: 0.75rem;
+    border-radius: 0.375rem;
     padding: 0.875rem 1rem;
     background-color: rgb(var(--surface));
   }

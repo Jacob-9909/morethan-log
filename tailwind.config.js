@@ -32,6 +32,9 @@ module.exports = {
         "2xl": ["1.5rem", { lineHeight: "1.3", letterSpacing: "-0.019em" }],
         "3xl": ["1.875rem", { lineHeight: "1.24", letterSpacing: "-0.023em" }],
       },
+      fontFamily: {
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+      },
       maxWidth: {
         prose: "42rem",
         shell: "64rem",

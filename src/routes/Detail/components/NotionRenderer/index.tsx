@@ -25,6 +25,21 @@ const Code = dynamic(() =>
   import("react-notion-x/build/third-party/code").then(async (m) => m.Code)
 )
 
+// 코드블록 위에 언어 라벨을 붙인다. mermaid는 useMermaidEffect가 SVG로 바꾸므로 그대로 둔다.
+const CodeBlock = (props: any) => {
+  const language: string =
+    props.block?.properties?.language?.[0]?.[0]?.toLowerCase() || ""
+  if (!language || language === "mermaid") return <Code {...props} />
+  return (
+    <div className="code-block">
+      <div className="code-block-header">
+        {language === "plain text" ? "text" : language}
+      </div>
+      <Code {...props} />
+    </div>
+  )
+}
+
 const Collection = dynamic(() =>
   import("react-notion-x/build/third-party/collection").then(
     (m) => m.Collection
@@ -86,7 +101,7 @@ const NotionRenderer: FC<Props> = ({ recordMap }) => {
         darkMode={scheme === "dark"}
         recordMap={recordMap}
         components={{
-          Code,
+          Code: CodeBlock,
           Collection,
           Equation,
           Modal,

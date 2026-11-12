@@ -1,5 +1,4 @@
 import Link from "next/link"
-import Image from "next/image"
 import { formatDate } from "src/libs/utils"
 import { TPost } from "src/types"
 
@@ -7,51 +6,43 @@ type Props = {
   data: TPost
 }
 
+// 문서형 목록의 한 줄. 썸네일은 상세 페이지에서만 보여 준다.
 const PostCard: React.FC<Props> = ({ data }) => {
   const category = data.category?.[0]
+  const tags = data.tags?.slice(0, 3) ?? []
 
   return (
     <Link
       href={`/${data.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-accent/40"
+      className="group block border-b border-line py-5"
     >
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-elevated">
-        {data.thumbnail ? (
-          <Image
-            src={data.thumbnail}
-            alt={data.title}
-            fill
-            sizes="(min-width: 1024px) 340px, (min-width: 640px) 45vw, 100vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          // 썸네일 없는 글이 많아 빈 칸 대신 카테고리를 채운다.
-          <span className="flex h-full items-center justify-center px-4 text-center font-mono text-2xs uppercase tracking-[0.14em] text-subtle">
-            {category || "note"}
-          </span>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col p-4">
-        <h2 className="line-clamp-2 text-base font-semibold tracking-tight text-fg transition-colors group-hover:text-accent">
+      <div className="flex items-baseline justify-between gap-4">
+        <h2 className="min-w-0 text-lg font-semibold tracking-tight text-fg underline-offset-4 transition-colors group-hover:text-accent group-hover:underline">
           {data.title}
         </h2>
-        {data.summary && (
-          <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted">
-            {data.summary}
-          </p>
-        )}
-        <div className="mt-auto flex items-center gap-2 pt-3 font-mono text-2xs text-subtle">
-          <time>
-            {formatDate(data?.date?.start_date || data.createdTime, "en-US")}
-          </time>
-          {data.tags?.[0] && (
-            <>
-              <span aria-hidden>·</span>
-              <span className="truncate">#{data.tags[0]}</span>
-            </>
-          )}
-        </div>
+        <time className="shrink-0 font-mono text-xs text-subtle">
+          {formatDate(data?.date?.start_date || data.createdTime, "en-US")}
+        </time>
       </div>
+      {data.summary && (
+        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted">
+          {data.summary}
+        </p>
+      )}
+      {(category || tags.length > 0) && (
+        <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs">
+          {category && (
+            <span className="rounded-full border border-line px-2 py-0.5 text-muted">
+              {category}
+            </span>
+          )}
+          {tags.map((tag) => (
+            <span key={tag} className="font-mono text-subtle">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
     </Link>
   )
 }

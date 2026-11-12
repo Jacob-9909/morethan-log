@@ -4,36 +4,41 @@
 
 @layer base {
   /* 단일 진실 원천: 색 값은 여기서만 정의하고 tailwind.config가 참조한다. */
+  /* GitHub Primer 계열 중립색 + 링크 블루. 텍스트 대비는 모두 4.5:1 이상. */
   :root {
     color-scheme: light;
-    --bg: 250 250 250;
-    --surface: 255 255 255;
-    --elevated: 244 244 245;
-    --fg: 24 24 27;
-    --muted: 82 82 91;
-    --subtle: 113 113 122;
-    --line: 228 228 231;
-    --line-strong: 212 212 216;
-    --accent: 15 118 110;
-    --accent-solid: 15 118 110;
+    --bg: 255 255 255;
+    --surface: 246 248 250;
+    --elevated: 239 242 245;
+    --fg: 31 35 40;
+    --muted: 89 99 110;
+    --subtle: 101 109 118;
+    --line: 209 217 224;
+    --line-strong: 175 184 193;
+    --accent: 9 105 218;
+    --accent-solid: 9 105 218;
     --accent-on: 255 255 255;
-    --accent-soft: 240 253 250;
+    --accent-soft: 221 244 255;
+    /* 코드블록은 prism-tomorrow라 두 모드 모두 어둡다. 헤더도 여기에 맞춘다. */
+    --code-bg: 45 45 45;
+    --code-header: 37 37 37;
+    --code-muted: 160 160 160;
   }
 
   [data-scheme="dark"] {
     color-scheme: dark;
-    --bg: 9 9 11;
-    --surface: 24 24 27;
-    --elevated: 39 39 42;
-    --fg: 250 250 250;
-    --muted: 161 161 170;
-    --subtle: 113 113 122;
-    --line: 39 39 42;
-    --line-strong: 63 63 70;
-    --accent: 45 212 191;
-    --accent-solid: 20 184 166;
-    --accent-on: 4 47 46;
-    --accent-soft: 19 78 74;
+    --bg: 13 17 23;
+    --surface: 21 27 35;
+    --elevated: 33 40 48;
+    --fg: 240 246 252;
+    --muted: 145 152 161;
+    --subtle: 125 133 144;
+    --line: 61 68 77;
+    --line-strong: 72 79 88;
+    --accent: 68 147 248;
+    --accent-solid: 31 111 235;
+    --accent-on: 255 255 255;
+    --accent-soft: 18 36 59;
   }
 
   ::selection {
@@ -69,11 +74,12 @@
     @apply my-4 leading-[1.9];
   }
 
-  .notion-inline-code {
-    @apply rounded border border-accent/15 bg-accent/10 px-1.5 py-0.5 font-mono text-[0.85em] text-accent;
+  /* react-notion-x 스타일이 나중에 로드돼 같은 특이도면 진다. .notion으로 한 단계 올린다. */
+  .notion .notion-inline-code {
+    @apply rounded-md bg-fg/[0.08] px-1.5 py-0.5 font-mono text-[0.85em] text-fg;
   }
 
-  .notion-link {
+  .notion .notion-link {
     @apply text-accent decoration-accent/30 underline underline-offset-[3px] transition-colors hover:decoration-accent;
   }
 
@@ -83,7 +89,36 @@
   }
 
   .notion-code {
-    @apply rounded-xl border border-line font-mono !text-sm;
+    @apply rounded-md border border-line font-mono !text-sm;
+  }
+
+  /* prism 테마의 code[class*="language-"] 글꼴보다 우선한다. */
+  pre.notion-code code {
+    @apply font-mono;
+  }
+
+  /* NotionRenderer의 CodeBlock이 언어 라벨 헤더를 붙인다. */
+  /* notion 블록 컨테이너가 flex라 너비를 고정하지 않으면 긴 코드 줄만큼 늘어난다. */
+  .code-block {
+    @apply my-4 w-full min-w-0 overflow-hidden rounded-md border border-line;
+  }
+
+  .code-block-header {
+    @apply flex items-center px-4 py-2 font-mono text-2xs lowercase;
+    background-color: rgb(var(--code-header));
+    color: rgb(var(--code-muted));
+    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+  }
+
+  .code-block .notion-code {
+    @apply !m-0 rounded-none border-0;
+  }
+
+  /* 복사 버튼이 hover에서만 보이면 터치 기기에서는 못 쓴다. */
+  @media (hover: none) {
+    .notion-code .notion-code-copy {
+      opacity: 1;
+    }
   }
 
   .notion-quote {
@@ -101,7 +136,7 @@
 
   .notion-asset-wrapper img,
   .notion-asset-wrapper .notion-image {
-    @apply rounded-xl;
+    @apply rounded-md;
   }
 }
 
