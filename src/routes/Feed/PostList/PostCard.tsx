@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { formatDate } from "src/libs/utils"
 import { TPost } from "src/types"
 
@@ -6,7 +7,7 @@ type Props = {
   data: TPost
 }
 
-// 문서형 목록의 한 줄. 썸네일은 상세 페이지에서만 보여 준다.
+// 문서형 목록의 한 줄. 썸네일이 있는 글만 오른쪽에 작게 보여 준다.
 const PostCard: React.FC<Props> = ({ data }) => {
   const category = data.category?.[0]
   const tags = data.tags?.slice(0, 3) ?? []
@@ -14,23 +15,21 @@ const PostCard: React.FC<Props> = ({ data }) => {
   return (
     <Link
       href={`/${data.slug}`}
-      className="group block border-b border-line py-5"
+      className="group flex gap-4 border-b border-line py-5 sm:gap-6"
     >
-      <div className="flex items-baseline justify-between gap-4">
-        <h2 className="min-w-0 text-lg font-semibold tracking-tight text-fg underline-offset-4 transition-colors group-hover:text-accent group-hover:underline">
+      <div className="min-w-0 flex-1">
+        <h2 className="text-lg font-semibold tracking-tight text-fg underline-offset-4 transition-colors group-hover:text-accent group-hover:underline">
           {data.title}
         </h2>
-        <time className="shrink-0 font-mono text-xs text-subtle">
-          {formatDate(data?.date?.start_date || data.createdTime, "en-US")}
-        </time>
-      </div>
-      {data.summary && (
-        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted">
-          {data.summary}
-        </p>
-      )}
-      {(category || tags.length > 0) && (
+        {data.summary && (
+          <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted">
+            {data.summary}
+          </p>
+        )}
         <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs">
+          <time className="font-mono text-subtle">
+            {formatDate(data?.date?.start_date || data.createdTime, "en-US")}
+          </time>
           {category && (
             <span className="rounded-full border border-line px-2 py-0.5 text-muted">
               {category}
@@ -41,6 +40,19 @@ const PostCard: React.FC<Props> = ({ data }) => {
               #{tag}
             </span>
           ))}
+        </div>
+      </div>
+      {data.thumbnail && (
+        <div className="relative aspect-[16/10] w-24 shrink-0 self-start overflow-hidden rounded-md border border-line bg-elevated sm:w-36">
+          {/* ponytail: Notion 이미지 서버가 Next 최적화기(서버 fetch)에 403을 줘서 브라우저가 직접 받는다.
+              원본 크기를 그대로 받으므로 무거우면 썸네일을 리사이즈해 public/에 두는 쪽으로 바꾼다. */}
+          <Image
+            src={data.thumbnail}
+            alt=""
+            fill
+            unoptimized
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
         </div>
       )}
     </Link>
